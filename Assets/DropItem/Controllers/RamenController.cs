@@ -4,16 +4,41 @@ using UnityEngine;
 
 public class RamenController : MonoBehaviour
 {
-    float fallSpeed = 0.001f;
-    float accelaration = 1.001f;
-    private int point = 800;
+    public float fallSpeed;
+    public float accelaration;
+    public int point;
 
-    private void Accelerate(float acer)
+    public void Accelerate(float acer)
     {
         fallSpeed *= accelaration;
     }
 
-    void Update()
+   
+    public void Fall()
+    {
+        transform.Translate(0, -fallSpeed, 0);
+    }
+
+    private void OnTriggerEnter(Collider collision)
+    {
+
+        if (collision.gameObject.tag == "Player")
+        {
+            GameOverseer.UpdateScore(point);
+            Destroy(gameObject);
+        }
+
+
+    }
+
+    private void Start()
+    {
+        this.accelaration = 1.001f;
+        this.fallSpeed = 0.0015f;
+        this.point = DropItemConstants.RAMENPOINT;
+    }
+
+    private void Update()
     {
         Fall();
         Accelerate(accelaration);
@@ -21,20 +46,4 @@ public class RamenController : MonoBehaviour
         if (transform.position.y < -10.0f) Destroy(gameObject);
     }
 
-    public void Fall()
-    {
-        transform.Translate(0, -fallSpeed, 0);
-    }
-
-    public void OnTriggerEnter(Collider collision)
-    {
-
-        if (collision.gameObject.tag == "Player")
-        {
-            GameOverseer.UpdateScore(this.point);
-            Destroy(gameObject);
-        }
-
-
-    }
 }

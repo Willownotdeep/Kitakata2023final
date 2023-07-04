@@ -16,6 +16,7 @@ public class GameOverseer : MonoBehaviour
     GameObject player;
     GameObject timetxt;
     GameObject scoretxt;
+    GameObject door;
     //GameObject rightWall;
     //GameObject leftWall;
 
@@ -23,6 +24,7 @@ public class GameOverseer : MonoBehaviour
     public static float rightLimit;
     public static float leftLimit;
     public static float upLimit;
+    public static float playerZ;
 
     public static int score = 0;
     float time = Constants.TIMELIMIT;　//制限時間
@@ -33,6 +35,7 @@ public class GameOverseer : MonoBehaviour
         rightLimit = GameObject.Find("RightWallCube").transform.position.x;
         leftLimit = GameObject.Find("LeftWallCube").transform.position.x;
         upLimit  = GameObject.Find("CeillingCube").transform.position.y; 
+        playerZ = GameObject.Find("player").transform.position.z;
     }
 
     //必要なオブジェクトを見つける
@@ -41,6 +44,7 @@ public class GameOverseer : MonoBehaviour
         this.player = GameObject.Find("player");
         this.timetxt = GameObject.Find("Time");
         this.scoretxt = GameObject.Find("Score");
+        this.door = GameObject.Find("Door");
     }
 
     //落下物の頻度の計算、時間が立つと頻度が高くなる。
@@ -53,7 +57,6 @@ public class GameOverseer : MonoBehaviour
     //スコアの計算と更新
     public static void UpdateScore(int point)
     {
-        Debug.Log("Point, Score: " + point + "," + score);
         score += point;
         if (score <= 0) score = 0;
     }
@@ -74,7 +77,6 @@ public class GameOverseer : MonoBehaviour
     {
         FindObjects();
         SetScreenLimit();
-        Debug.Log(rightLimit);
     }
 
     void Update()

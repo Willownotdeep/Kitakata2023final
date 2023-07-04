@@ -1,3 +1,5 @@
+//定数のみのクラス
+
 public static class DropItemConstants
 {
     //落下物の加算スコア

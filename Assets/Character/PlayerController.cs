@@ -5,7 +5,7 @@ using UnityEngine;
 
 static class PlayerConstants
 {
-    public const float defSpeed = 0.1f;
+    public const float defSpeed = 0.2f;
 }
 
 public class PlayerController : MonoBehaviour
@@ -54,7 +54,7 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         Move();
-        Debug.Log(gameObject.transform.position);
+        Debug.Log(gameObject.transform.position.z);
         if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow)) ResetSpeed();
     }
 }

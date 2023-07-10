@@ -5,14 +5,19 @@ using UnityEngine;
 
 static class PlayerConstants
 {
-    public const float defSpeed = 0.2f;
+    public const float defSpeed = 0.8f;
 }
 
 public class PlayerController : MonoBehaviour
 {
     float Speed = PlayerConstants.defSpeed;
-    float speedLimit = 0.2f;
 
+
+    public static bool isHit = false;
+    private bool AutoLeft = false;
+    private bool AutoRight = false;
+    private int cnt = 0;
+    private int AutoCnt = 0;
     private void Move()
     {
         if (this.transform.position.x > GameOverseer.rightLimit)
@@ -27,34 +32,75 @@ public class PlayerController : MonoBehaviour
 
 
         else if (Input.GetKey(KeyCode.RightArrow))
-        {   
+        {
+            //AutoRight = false;
             transform.Translate(this.Speed, 0, 0);
-            if (this.Speed < this.speedLimit) this.Speed *= 1.0005f;
         }
 
+        else if (Input.GetKeyUp(KeyCode.RightArrow))
+        {
+            //AutoLeft = true;
+        }
 
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
+            //AutoLeft = false;
             transform.Translate(-this.Speed, 0, 0);
-            if (this.Speed < this.speedLimit) this.Speed *= 1.0005f;
         }
 
-        else if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow))
+        else if (Input.GetKeyUp(KeyCode.LeftArrow))
         {
-            this.Speed = 0.002f;
+            //AutoRight = true;
         }
+
+        else if (AutoLeft)
+        {
+            if (++AutoCnt > 30) transform.Translate(-this.Speed * 0.2f, 0, 0);
+            if (++AutoCnt < 100) transform.Translate(-this.Speed * 0, 0, 0);
+        }
+
+        else if (AutoRight)
+        {
+            if (++AutoCnt > 30) transform.Translate(this.Speed * 0.2f, 0, 0);
+            if (++AutoCnt < 100) transform.Translate(this.Speed * 0, 0, 0);
+        }
+
+
+
     }
 
     //ƒvƒŒƒCƒ„[‚Ì‘¬‚³‚ð‚à‚Æ‚É–ß‚·
-    private void ResetSpeed()
+    /*private void ResetSpeed()
     {
         this.Speed = PlayerConstants.defSpeed;
-    }
+    }*/
 
     void Update()
     {
         Move();
-        Debug.Log(gameObject.transform.position.z);
-        if (Input.GetKeyUp(KeyCode.RightArrow) || Input.GetKeyUp(KeyCode.LeftArrow)) ResetSpeed();
+        if (isHit)
+        {
+            HitAnimation();
+            cnt++;
+            if (cnt >= 100) Normalize();
+        }
+    } 
+    public static void Hit()
+    {
+        isHit = true;
     }
+
+    private void HitAnimation()
+    {
+       this.GetComponent<Renderer>().material.color = Color.gray;
+    }
+
+    private void Normalize()
+    {
+        this.GetComponent<Renderer>().material.color = Color.white;
+        isHit = false;
+    }
+
+
 }
+

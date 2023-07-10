@@ -5,8 +5,10 @@ using UnityEngine;
 public class StoneGenerator : MonoBehaviour
 {
     public GameObject Prefab;
+
+
     private static float span;
-    private static float freq = 3.0f;
+    private static float freq = 6.0f;
     public float delta = 10.0f;
 
     //ƒ‰ƒ“ƒ_ƒ€‚ÈˆÊ’u‚É¶¬
@@ -18,7 +20,7 @@ public class StoneGenerator : MonoBehaviour
             this.delta = 0;
             GameObject go = Instantiate(Prefab);
 
-            float px = Random.Range(GameOverseer.rightLimit, GameOverseer.leftLimit);
+            float px = Random.Range(GameOverseer.rightLimit - 30.0f, GameOverseer.leftLimit + 30.0f);
             go.transform.position = new Vector3(px, GameOverseer.upLimit, GameOverseer.playerZ);
         }
     }
@@ -33,5 +35,8 @@ public class StoneGenerator : MonoBehaviour
     private void Update()
     {
         Generate(span);
+
+        //§ŒÀŠÔ‚ğ’´‰ß‚µ‚½‚ç’â~
+        if (GameOverseer.isOver) span = 1000000f;
     }
 }

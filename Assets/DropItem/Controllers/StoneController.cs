@@ -4,26 +4,27 @@ using UnityEngine;
 
 public class StoneController : MonoBehaviour
 {
-    float fallSpeed = 0.05f;
+    float fallSpeed = DropItemConstants.STONESPEED;
     private int point = DropItemConstants.STONEPOINT;
 
-    public void Update()
+    private void Update()
     {
         Fall();
-        if (transform.position.y < -7.0f) Destroy(gameObject);
+        if (transform.position.y < 3.0f) Destroy(gameObject);
     }
 
-    public void Fall()
+    private void Fall()
     {
         transform.Translate(0, -fallSpeed, 0);
     }
 
-    public void OnTriggerEnter(Collider collision)
+    private void OnTriggerEnter(Collider collision)
     {
 
         if (collision.gameObject.tag == "Player")
         {
             GameOverseer.UpdateScore(this.point);
+            PlayerController.isHit = true;
             Destroy(gameObject);
         }
 

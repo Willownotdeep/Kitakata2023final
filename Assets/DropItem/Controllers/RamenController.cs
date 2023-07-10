@@ -16,7 +16,7 @@ public class RamenController : MonoBehaviour
    
     public void Fall()
     {
-        transform.Translate(0, -fallSpeed, 0);
+        transform.Translate(0, -fallSpeed, 0, Space.World);
     }
 
     private void OnTriggerEnter(Collider collision)
@@ -25,17 +25,28 @@ public class RamenController : MonoBehaviour
         if (collision.gameObject.tag == "Player")
         {
             GameOverseer.UpdateScore(point);
+
+            //パーティクルのついたオブジェクトを移動させて再生
+            GameObject go = GameObject.Find("ParticleCube");
+            go.transform.position = this.transform.position;
+
+            go.GetComponent<ParticleSystem>().Play();
+            go.GetComponent<AudioSource>().Play();
+
             Destroy(gameObject);
         }
+
 
 
     }
 
     private void Start()
     {
-        this.accelaration = 1.001f;
-        this.fallSpeed = 0.0015f;
+        this.accelaration = DropItemConstants.RAMENACC;
+        this.fallSpeed = DropItemConstants.RAMENSPEED;
         this.point = DropItemConstants.RAMENPOINT;
+
+     
     }
 
     private void Update()
@@ -43,7 +54,7 @@ public class RamenController : MonoBehaviour
         Fall();
         Accelerate(accelaration);
 
-        if (transform.position.y < -10.0f) Destroy(gameObject);
+        if (transform.position.y < 0f) Destroy(gameObject);
     }
 
 }

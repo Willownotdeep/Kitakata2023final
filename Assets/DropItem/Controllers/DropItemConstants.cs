@@ -5,8 +5,8 @@ public static class DropItemConstants
     //—Ž‰º•¨‚Ì‰ÁŽZƒXƒRƒA
     public const int STONEPOINT = -10000;
     public const int RAMENPOINT = 8000;
-    public const int SENBEIPOINT = 30000;
-    public const int SAKABINPOINT = 40000;
+    public const int SENBEIPOINT = 25000;
+    public const int SAKABINPOINT = 35000;
     public const int MISOPOINT = 30000;
    
     //—Ž‰º‘¬

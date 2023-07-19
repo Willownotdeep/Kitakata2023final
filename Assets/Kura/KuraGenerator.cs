@@ -9,7 +9,7 @@ public static class KuraConstants
     public const int SECOND = 40000;
     public const int THIRD = 100000;
     public const int FOURTH = 400000;
-    public const int FIFTH = 1000000;
+    public const int FIFTH = 1200000;
 }
 
 public class KuraGenerator : MonoBehaviour
@@ -24,6 +24,7 @@ public class KuraGenerator : MonoBehaviour
     public static Vector3 door;
     public static bool call = false;
     public static int flag = 0; //蔵がアップグレードした回数、ゼロにセットしてください
+    public static int flagAfter = 0;
     
     private bool rotate = false;
     private Vector3 position; //クリア後蔵表示の位置調整するのに使う
@@ -34,9 +35,16 @@ public class KuraGenerator : MonoBehaviour
         Debug.Log(door);
     }
 
+    private void Awake()
+    {
+        flag = 0;
+        call = false;
+        rotate = false;
+    }
+
     private void Update()
     {
-        if(GameOverseer.score >= KuraConstants.FIRST && flag == 0 && Time.time >= Constants.STARTTIME)
+        if(GameOverseer.score >= KuraConstants.FIRST && flag == 0 && Time.timeSinceLevelLoad >= Constants.STARTTIME)
         {
             changeKura(++flag);
         }
@@ -65,6 +73,7 @@ public class KuraGenerator : MonoBehaviour
             changeKura(++flag);
         }
 
+
         if (rotate) { Rotation();  }
         if (call) KuraView();
     }
@@ -79,6 +88,7 @@ public class KuraGenerator : MonoBehaviour
         else if (kuraNumber == 4) go = Instantiate(SecondKuraLargePrefab);
         else if (kuraNumber == 5) go = Instantiate(LastKuraPrefab);
 
+        flagAfter = flag;
         rotate = true;
         if (call) { call = false; rotate = false; }
     }
@@ -102,21 +112,22 @@ public class KuraGenerator : MonoBehaviour
 
     public static void CallOn()
     {
-        if(flag > 0) call = true;
+        call = true;
     }
     //蔵の召還
     public void KuraView()
     {
 
-        if (flag == 1) position = new Vector3(479.8f, 161.7f, 323.8f);
-        if (flag == 2) position = new Vector3(479.8f, 155.3f, 322.1f);
-        if (flag == 3) position = new Vector3(479.8f, 203.8f, 268.3f);
-        if (flag == 4) position = new Vector3(479.8f, 211.7f, 207.6f);
-        if (flag == 5) position = new Vector3(479.8f, 210.0f, 191.6f);
+        if (flagAfter == 1) position = new Vector3(479.8f, 161.7f, 323.8f);
+        if (flagAfter == 2) position = new Vector3(479.8f, 155.3f, 322.1f);
+        if (flagAfter == 3) position = new Vector3(479.8f, 203.8f, 268.3f);
+        if (flagAfter == 4) position = new Vector3(479.8f, 211.7f, 207.6f);
+        if (flagAfter == 5) position = new Vector3(479.8f, 210.0f, 191.6f);
 
-        changeKura(flag);
+        Debug.Log("kuraview:" + flagAfter);
+        changeKura(flagAfter);
         go.transform.position = position;
-        Debug.Log("Kuraview");
+        flagAfter = 0;
     }
 
   

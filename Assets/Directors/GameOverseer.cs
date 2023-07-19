@@ -30,7 +30,7 @@ public class GameOverseer : MonoBehaviour
     float time; //制限時間
     public static int score = 0;
     public static bool isOver;
-    public static bool isStart;
+    public static bool isStart; //チュートリアル中か
    
 
     //スクリーンの端の座標を取得（透明な壁のx座標）
@@ -54,8 +54,7 @@ public class GameOverseer : MonoBehaviour
     //時間切れでシーン遷移
     private void ChangeScene()
     {
-        time += Time.time;
-        if (time > 4.0f) SceneManager.LoadScene("ClearScene");
+        SceneManager.LoadScene("ClearScene");
     }
 
     //落下物の頻度の計算、時間が立つと頻度が高くなる。
@@ -68,7 +67,7 @@ public class GameOverseer : MonoBehaviour
     //スコアの計算と更新
     public static void UpdateScore(int point)
     {
-        if (Time.time > Constants.STARTTIME)
+        if (Time.timeSinceLevelLoad > Constants.STARTTIME)
         {
             score += point;
             if (score <= 0) score = 0;
@@ -78,9 +77,12 @@ public class GameOverseer : MonoBehaviour
     //文字情報を更新する
     private void UpdateText()
     {
-        //更新されたスコアを反映する
+        if (Time.timeSinceLevelLoad < Constants.STARTTIME) this.scoretxt.GetComponent<Text>().text = "練習中！！";
+        
         //elseはカンマ区切り表示、０のときなぜか表示されないので０の時は普通に表示
-        if(score == 0)this.scoretxt.GetComponent<Text>().text = "売上 " + score.ToString() + " 円";
+        else if (score == 0)this.scoretxt.GetComponent<Text>().text = "売上 " + score.ToString() + " 円";
+
+        //更新されたスコアを反映する
         else this.scoretxt.GetComponent<Text>().text = "売上 " + string.Format("{0:#,#}", score) + " 円";
 
         //時間を更新して反映する
@@ -104,13 +106,12 @@ public class GameOverseer : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Space)) ChangeScene();  
     }
-
+    //チュートリアル
     private void Starting()
     {
-        float startingTime = Constants.STARTTIME - Time.time;
-        if(startingTime == 0) this.starttxt.GetComponent<Text>().text = "スタート！";
+        float startingTime = Constants.STARTTIME - Time.timeSinceLevelLoad;
+        if (startingTime < 1.0f) this.starttxt.GetComponent<Text>().text = "スタート！";
         else this.starttxt.GetComponent<Text>().text = "スタートまで：" + startingTime.ToString("F0");
-        isStart = false;
     }
 
     //Startの前に呼ばれる
@@ -118,6 +119,7 @@ public class GameOverseer : MonoBehaviour
     {
         time = Constants.TIMELIMIT;　//制限時間
         isOver = false;
+        isStart = false;
         dropItemSpan = 10.0f;
         score = 0;
 
@@ -132,10 +134,13 @@ public class GameOverseer : MonoBehaviour
     void Update()
     {
         UpdateText();
-        
-        //開始６秒前から開始までの間Startingを呼ぶ
-        if (Time.time >= (Constants.STARTTIME - 6) && Time.time < Constants.STARTTIME) isStart = true;
 
+        //開始６秒前から開始までの間Startingを呼ぶ
+        if (Time.timeSinceLevelLoad >= (Constants.STARTTIME - 6) &&
+            Time.timeSinceLevelLoad < Constants.STARTTIME) isStart = true;
+        else if (Time.timeSinceLevelLoad >= (Constants.STARTTIME + 3.0f)) isStart = false;
+
+        //isStart中ならStartingをよび、終わったら開始テキストを消す
         if (isStart) Starting();
         else this.starttxt.GetComponent<Text>().text = ""; 
              
@@ -147,5 +152,7 @@ public class GameOverseer : MonoBehaviour
 
         //ゲームのリセット、タイトルに戻る(esc + Q)
         if (Input.GetKey(KeyCode.Escape) && Input.GetKey(KeyCode.Q)) SceneManager.LoadScene(0);
+
+        Debug.Log(Time.timeSinceLevelLoad);
     }
 }

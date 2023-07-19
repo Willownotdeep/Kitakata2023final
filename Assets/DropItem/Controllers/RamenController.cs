@@ -7,6 +7,10 @@ public class RamenController : MonoBehaviour
     public float fallSpeed;
     public float accelaration;
     public int point;
+    
+    private float rot;
+    private float roty;
+    private float rotz;
 
     public void Accelerate(float acer)
     {
@@ -45,16 +49,25 @@ public class RamenController : MonoBehaviour
         this.accelaration = DropItemConstants.RAMENACC;
         this.fallSpeed = DropItemConstants.RAMENSPEED;
         this.point = DropItemConstants.RAMENPOINT;
-
-     
+        
+        rot = Random.Range(0.4f, 4.6f);
+        roty = Random.Range(0.4f, 4.6f);
+        rotz = Random.Range(0.4f, 4.6f);
     }
 
     private void Update()
     {
         Fall();
+        RamenRotate();
         Accelerate(accelaration);
 
-        if (transform.position.y < 0f) Destroy(gameObject);
+        if (transform.position.y < 0) Destroy(gameObject);
+    }
+
+    private void RamenRotate()
+    {
+        rot *= 1.0006f;
+        transform.Rotate(-0.3f * rot, 0, 1.0f * rotz, Space.World);
     }
 
 }

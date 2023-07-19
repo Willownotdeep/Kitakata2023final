@@ -26,7 +26,7 @@ public class MisoController : SakabinController
             MisoFall();
             MisoRotate();
         }
-
+        
         if (transform.position.y < -10.0f) Destroy(gameObject);
     }
 
@@ -41,7 +41,7 @@ public class MisoController : SakabinController
 
     private void MisoRotate()
     {
-        transform.Rotate(1.0f, 2.0f, 3.0f, Space.World);
+        transform.Rotate(4.0f, 2.0f, 3.0f, Space.World);
     }
 
 }

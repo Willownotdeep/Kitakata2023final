@@ -6,6 +6,8 @@ using UnityEngine;
 static class PlayerConstants
 {
     public const float defSpeed = 0.8f;
+    public const int AUTOSTART = 0; 
+    public const int AUTOEND = 0; //ここをゼロにすればオフ
 }
 
 public class PlayerController : MonoBehaviour
@@ -33,51 +35,56 @@ public class PlayerController : MonoBehaviour
 
         else if (Input.GetKey(KeyCode.RightArrow))
         {
-            //AutoRight = false;
+            UnableAuto();
             transform.Translate(this.Speed, 0, 0);
         }
 
         else if (Input.GetKeyUp(KeyCode.RightArrow))
         {
-            //AutoLeft = true;
+            AutoLeft = true;
         }
 
         else if (Input.GetKey(KeyCode.LeftArrow))
         {
-            //AutoLeft = false;
+            UnableAuto();
             transform.Translate(-this.Speed, 0, 0);
         }
 
         else if (Input.GetKeyUp(KeyCode.LeftArrow))
         {
-            //AutoRight = true;
+            AutoRight = true;
         }
 
         else if (AutoLeft)
         {
-            if (++AutoCnt > 30) transform.Translate(-this.Speed * 0.2f, 0, 0);
-            if (++AutoCnt < 100) transform.Translate(-this.Speed * 0, 0, 0);
+            if (++AutoCnt > PlayerConstants.AUTOSTART && AutoCnt < PlayerConstants.AUTOEND) transform.Translate(-this.Speed * 0.2f, 0, 0);
+            if (++AutoCnt > PlayerConstants.AUTOEND) { UnableAuto(); }
         }
 
         else if (AutoRight)
         {
-            if (++AutoCnt > 30) transform.Translate(this.Speed * 0.2f, 0, 0);
-            if (++AutoCnt < 100) transform.Translate(this.Speed * 0, 0, 0);
+            if (++AutoCnt > PlayerConstants.AUTOSTART && AutoCnt < PlayerConstants.AUTOEND) transform.Translate(this.Speed * 0.2f, 0, 0);
+            if (AutoCnt > PlayerConstants.AUTOEND) { UnableAuto(); }
         }
+
+        Debug.Log(AutoCnt);
+
 
 
 
     }
 
-    //プレイヤーの速さをもとに戻す
-    /*private void ResetSpeed()
+    private void UnableAuto()
     {
-        this.Speed = PlayerConstants.defSpeed;
-    }*/
+        AutoCnt = 0;
+        AutoRight = false;
+        AutoLeft = false;
+    }
 
     void Update()
     {
         Move();
+        Debug.Log(cnt);
         if (isHit)
         {
             HitAnimation();
@@ -98,6 +105,7 @@ public class PlayerController : MonoBehaviour
     private void Normalize()
     {
         this.GetComponent<Renderer>().material.color = Color.white;
+        cnt = 0;
         isHit = false;
     }
 

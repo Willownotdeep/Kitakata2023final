@@ -7,7 +7,7 @@ public class SakabinGenerator : StoneGenerator
     private static float span;
     private static float freq = 2.0f;
 
-    public static bool isActivate;
+    public static bool isActivate; //‚·‚¬‚¾‚Ü‚ğ‚Æ‚é‚ÆƒIƒ“
 
     private int cnt = 0;
 
@@ -32,19 +32,16 @@ public class SakabinGenerator : StoneGenerator
         if (GameOverseer.score > KuraConstants.THIRD)
         {
             
-                       
+            //™‹…‚ğ‚Æ‚é‚Æ¶¬ŠÔŠu‚ªk‚Ü‚é           
             if (isActivate)
             {
                 span = 0.1f;
                 cnt++;
-                if (cnt >= 300) isActivate = false;
+                if (cnt >= 400) isActivate = false;
             }
 
             else span = UpdateSpan(freq);
             Generate(span);
-
-            //§ŒÀŠÔ‚ğ’´‰ß‚µ‚½‚ç’â~
-            if (GameOverseer.isOver) span = 1000000f;
 
         }
     }

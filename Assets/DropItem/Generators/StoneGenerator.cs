@@ -15,7 +15,7 @@ public class StoneGenerator : MonoBehaviour
     public void Generate(float span)
     {
         this.delta += Time.deltaTime;
-        if (this.delta > span)
+        if (this.delta > span && !GameOverseer.isOver)
         {
             this.delta = 0;
             GameObject go = Instantiate(Prefab);
@@ -35,8 +35,5 @@ public class StoneGenerator : MonoBehaviour
     private void Update()
     {
         Generate(span);
-
-        //§ŒÀŠÔ‚ğ’´‰ß‚µ‚½‚ç’â~
-        if (GameOverseer.isOver) span = 1000000f;
     }
 }
